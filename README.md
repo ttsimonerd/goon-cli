@@ -14,5 +14,5 @@ A stylish, animated CLI application with ASCII art, color effects, and a smooth 
 
 ### Install from source
 ```bash
-pip install .
+pip install git+https://github.com/xyzvv9/gooncli
 ```
