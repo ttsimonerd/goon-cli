@@ -8,6 +8,8 @@ import sys
 import threading
 from importlib import resources
 import subprocess
+import termios
+import tty
 
 # ------------
 # Colors
@@ -26,6 +28,16 @@ COLORS = [
 # ------------
 # Functions
 # ------------
+def lock_input():
+    fd = sys.stdin.fileno()
+    old = termios.tcgetattr(fd)
+    tty.setcbreak(fd)
+    return old
+
+def unlock_input(old):
+    fd = sys.stdin.fileno()
+    termios.tcsetattr(fd, termios.TCSADRAIN, old)
+
 def clear():
     os.system("cls" if os.name == "nt" else "clear")
 
@@ -106,8 +118,12 @@ def update():
 # ------------
 # Main Body
 # ------------
+second_old = None
+old = lock_input()
 goon_today = 0
 def run_app():
+    global second_old
+    global old
     global goon_today
     clear()
     sleep(1)
@@ -121,8 +137,10 @@ def run_app():
     type_out_colored("Hello, welcome to the local goon project!")
     sleep(1)
     type_out("Do you want to take a try? (Yes/No) ")
+    unlock_input(old)
     yes_no =input("").lower()
     if yes_no == "yes" or yes_no == "y":
+        second_old = lock_input()
         clear()
         sleep(0.5)
         section("First step, incoming")
@@ -143,6 +161,7 @@ def run_app():
             type_out(HK_RED + "Maybe next time?" + RESET)
             sleep(0.5)
             type_out(HK_GREEN + "Exiting............................................" + RESET)
+            unlock_input(second_old)
             clear()
     else:
         sleep(1)
@@ -175,6 +194,7 @@ def run_app():
             sleep(0.5)
             type_out(HK_GREEN + "Have fun!" + RESET)
             sleep(2)
+            unlock_input(second_old)
         elif goon_from == "Videos":
             type_out(f"From the {HK_GREEN + goon_from + RESET} list you will goon to...")
             sleep(1)
@@ -182,6 +202,7 @@ def run_app():
             sleep(0.5)
             type_out(HK_GREEN + "Have fun!" + RESET)
             sleep(2)
+            unlock_input(second_old)
         elif goon_from == "Hentais/Anime":
             type_out(f"From the {HK_GREEN + goon_from + RESET} list you will goon to...")
             sleep(1)
@@ -189,6 +210,7 @@ def run_app():
             sleep(0.5)
             type_out(HK_GREEN + "Have fun!" + RESET)
             sleep(2)
+            unlock_input(second_old)
         elif goon_from == "Names":
             type_out(f"From the {HK_GREEN + goon_from + RESET} list you will goon to...")
             sleep(1)
@@ -196,3 +218,4 @@ def run_app():
             sleep(0.5)
             type_out(HK_GREEN + "Have fun!" + RESET)
             sleep(2)
+            unlock_input(second_old)
