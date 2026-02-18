@@ -99,7 +99,7 @@ def load_path(filep):
 def update():
     subprocess.run([
         sys.executable, "-m", "pip", "install",
-        "--upgrade", "--no-cache-dir",
+        "--upgrade","--force-reinstall", "--no-cache-dir",
         "git+https://github.com/ttsimonerd/goon-cli"
     ])
 

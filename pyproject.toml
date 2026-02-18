@@ -1,6 +1,6 @@
 [project]
 name = "gooncli"
-version = "1.0.6"
+version = "1.0.8"
 description = "Goon Project CLI Version"
 authors = [
     { name="ttsimonerd" }
@@ -10,3 +10,10 @@ requires-python = ">=3.8"
 
 [project.scripts]
 goon = "gooncli.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["gooncli*"]
+
+[tool.setuptools.package-data]
+gooncli = ["*.txt"]
