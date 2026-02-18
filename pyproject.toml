@@ -1,6 +1,6 @@
 [project]
 name = "gooncli"
-version = "1.0.0"
+version = "1.0.2"
 description = "Goon Project CLI Version"
 authors = [
     { name="xyzvv9" }
