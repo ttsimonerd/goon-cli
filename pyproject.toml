@@ -1,9 +1,9 @@
 [project]
 name = "gooncli"
-version = "1.0.0"
+version = "1.0.2"
 description = "Goon Project CLI Version"
 authors = [
-    { name="xyzvv9" }
+    { name="ttsimonerd" }
 ]
 readme = "README.md"
 requires-python = ">=3.8"
