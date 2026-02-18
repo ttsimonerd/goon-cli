@@ -1,0 +1,57 @@
+name: Auto-bump version
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Bump version in pyproject.toml
+        run: |
+          python3 << 'EOF'
+          import re
+          from pathlib import Path
+
+          path = Path("pyproject.toml")
+          text = path.read_text()
+
+          # Find version = "X.Y.Z"
+          match = re.search(r'version\s*=\s*"(\d+)\.(\d+)\.(\d+)"', text)
+          if not match:
+              raise SystemExit("Version not found")
+
+          major, minor, patch = map(int, match.groups())
+          patch += 1  # bump patch version
+
+          new_version = f'{major}.{minor}.{patch}'
+          new_text = re.sub(
+              r'version\s*=\s*"\d+\.\d+\.\d+"',
+              f'version = "{new_version}"',
+              text
+          )
+
+          path.write_text(new_text)
+          print("Bumped version to", new_version)
+          EOF
+
+      - name: Commit and push version bump
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add pyproject.toml
+          git commit -m "Auto-bump version"
+          git push
