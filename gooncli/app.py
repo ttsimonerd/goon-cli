@@ -10,10 +10,10 @@ import threading
 # ------------
 # Paths
 # ------------
-ANIMATIONS_P = "/home/smorenoc/Python/General/local-goon-project/anim-list.txt"
-VIDS_P = "/home/smorenoc/Python/General/local-goon-project/vids-list.txt"
-HEN_P = "/home/smorenoc/Python/General/local-goon-project/henlist.txt"
-NAMES_P = "/home/smorenoc/Python/General/local-goon-project/ph-namelist.txt"
+ANIMATIONS_P = "~/local-goon-project/gooncli/anim-list.txt"
+VIDS_P = "~/local-goon-project/gooncli/vids-list.txt"
+HEN_P = "~/local-goon-project/gooncli/henlist.txt"
+NAMES_P = "~/local-goon-project/gooncli/ph-namelist.txt"
 
 # ------------
 # Colors
@@ -65,10 +65,10 @@ def type_out(text, speed=0.067):
     print()
 
 def load_logo():
-    with open("/home/smorenoc/Python/General/local-goon-project/logo.txt", "r", encoding="utf-8") as f:
+    with open("local-goon-project/gooncli/logo.txt", "r", encoding="utf-8") as f:
         return f.read().splitlines()
 
-def print_centered_logo(path="/home/smorenoc/Python/General/local-goon-project/logo.txt"):
+def print_centered_logo(path="~/local-goon-project/gooncli/logo.txt"):
     with open(path, "r", encoding="utf-8") as f:
         lines = f.read().splitlines()
 
