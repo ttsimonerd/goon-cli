@@ -6,14 +6,8 @@ import shutil
 import os
 import sys
 import threading
-
-# ------------
-# Paths
-# ------------
-ANIMATIONS_P = "~/local-goon-project/gooncli/anim-list.txt"
-VIDS_P = "~/local-goon-project/gooncli/vids-list.txt"
-HEN_P = "~/local-goon-project/gooncli/henlist.txt"
-NAMES_P = "~/local-goon-project/gooncli/ph-namelist.txt"
+from importlib import resources
+import subprocess
 
 # ------------
 # Colors
@@ -64,12 +58,8 @@ def type_out(text, speed=0.067):
         time.sleep(speed)
     print()
 
-def load_logo():
-    with open("local-goon-project/gooncli/logo.txt", "r", encoding="utf-8") as f:
-        return f.read().splitlines()
-
-def print_centered_logo(path="~/local-goon-project/gooncli/logo.txt"):
-    with open(path, "r", encoding="utf-8") as f:
+def print_centered_logo():
+    with resources.files("gooncli").joinpath("logo.txt") as path:
         lines = f.read().splitlines()
 
     width, _ = shutil.get_terminal_size()
@@ -102,6 +92,17 @@ def input_with_cursor(prompt=""):
     t = threading.Thread(target=cursor_loop, daemon=True)
     t.start()
     return input(prompt)
+
+def load_path(filep):
+    with resources.files("gooncli").joinpath(filep) as path:
+        lines = f.read().splitlines()
+
+def update():
+    subprocess.run([
+        sys.executable, "-m", "pip", "install",
+        "--upgrade", "--no-cache-dir",
+        "git+https://github.com/ttsimonerd/goon-cli"
+    ])
 
 # -----------
 # Variables
@@ -174,28 +175,28 @@ def run_app():
         if goon_from == "Animations":
             type_out(f"From the {HK_GREEN + goon_from + RESET} list you will goon to...")
             sleep(1)
-            type_out(random_line(ANIMATIONS_P))
+            type_out(random_line(load_path("anim-list.txt")))
             sleep(0.5)
             type_out(HK_GREEN + "Have fun!" + RESET)
             sleep(2)
         elif goon_from == "Videos":
             type_out(f"From the {HK_GREEN + goon_from + RESET} list you will goon to...")
             sleep(1)
-            type_out(random_line(VIDS_P))
+            type_out(random_line(load_path("vids-list.txt")))
             sleep(0.5)
             type_out(HK_GREEN + "Have fun!" + RESET)
             sleep(2)
         elif goon_from == "Hentais/Anime":
             type_out(f"From the {HK_GREEN + goon_from + RESET} list you will goon to...")
             sleep(1)
-            type_out(random_line(HEN_P))
+            type_out(random_line(load_path("henlist.txt")))
             sleep(0.5)
             type_out(HK_GREEN + "Have fun!" + RESET)
             sleep(2)
         elif goon_from == "Names":
             type_out(f"From the {HK_GREEN + goon_from + RESET} list you will goon to...")
             sleep(1)
-            type_out(random_line(NAMES_P))
+            type_out(random_line(load_path("ph-namelist.txt")))
             sleep(0.5)
             type_out(HK_GREEN + "Have fun!" + RESET)
             sleep(2)
