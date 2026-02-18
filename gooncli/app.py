@@ -103,11 +103,6 @@ def update():
         "git+https://github.com/ttsimonerd/goon-cli"
     ])
 
-# -----------
-# Variables
-# -----------
-goon_today = 0
-
 # ------------
 # Main Body
 # ------------
