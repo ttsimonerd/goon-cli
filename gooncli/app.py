@@ -10,6 +10,7 @@ from importlib import resources
 import subprocess
 import termios
 import tty
+import select
 
 # ------------
 # Colors
@@ -28,6 +29,10 @@ COLORS = [
 # ------------
 # Functions
 # ------------
+def flush_input():
+    while select.select([sys.stdin], [], [], 0)[0]:
+        sys.stdin.read(1)
+
 def lock_input():
     fd = sys.stdin.fileno()
     old = termios.tcgetattr(fd)
@@ -137,6 +142,7 @@ def run_app():
     type_out_colored("Hello, welcome to the local goon project!")
     sleep(1)
     type_out("Do you want to take a try? (Yes/No) ")
+    flush_input()
     unlock_input(old)
     yes_no =input("").lower()
     if yes_no == "yes" or yes_no == "y":
