@@ -106,8 +106,9 @@ def update():
 # ------------
 # Main Body
 # ------------
-global goon_today
+goon_today = 0
 def run_app():
+    global goon_today
     clear()
     sleep(1)
     print_border()
