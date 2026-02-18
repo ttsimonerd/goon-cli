@@ -6,7 +6,7 @@ on:
       - main
 
 permissions:
-  contents: write   # REQUIRED for pushing commits and creating releases
+  contents: write   # needed to push commits and create releases
 
 jobs:
   release:
@@ -26,6 +26,7 @@ jobs:
       - name: Auto-bump version in pyproject.toml
         id: bump
         run: |
+          python3 << 'EOF'
           import re
           from pathlib import Path
 
@@ -48,6 +49,7 @@ jobs:
 
           path.write_text(new_text)
           print(f"::set-output name=version::{new_version}")
+          EOF
 
       - name: Commit bumped version
         run: |
