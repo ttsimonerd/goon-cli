@@ -29,9 +29,8 @@ COLORS = [
 def clear():
     os.system("cls" if os.name == "nt" else "clear")
 
-def random_line(file):
-    return random.choice(open(file).read().splitlines())
-
+def random_line(lines):
+    return random.choice(lines)
 def loading(text="Loading", duration=3, speed=0.1):
     spinner = itertools.cycle(["{}".format(HK_GREEN+"|"+RESET), "{}".format(HK_GREEN+"/"+RESET), "{}".format(HK_GREEN+"-"+RESET), "{}".format(HK_GREEN+"\\"+RESET)])
     end_time = time.time() + duration
@@ -59,8 +58,8 @@ def type_out(text, speed=0.067):
     print()
 
 def print_centered_logo():
-    with resources.files("gooncli").joinpath("logo.txt") as path:
-        lines = f.read().splitlines()
+    text = resources.files("gooncli").joinpath("logo.txt").read_text()
+    lines = text.splitlines()
 
     width, _ = shutil.get_terminal_size()
 
@@ -94,8 +93,8 @@ def input_with_cursor(prompt=""):
     return input(prompt)
 
 def load_path(filep):
-    with resources.files("gooncli").joinpath(filep) as path:
-        lines = f.read().splitlines()
+    text = resources.files("gooncli").joinpath(filep).read_text()
+    return text.splitlines()
 
 def update():
     subprocess.run([
@@ -112,6 +111,7 @@ goon_today = 0
 # ------------
 # Main Body
 # ------------
+global goon_today
 def run_app():
     clear()
     sleep(1)
