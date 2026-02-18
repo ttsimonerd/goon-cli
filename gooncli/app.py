@@ -6,7 +6,6 @@ import shutil
 import os
 import sys
 import threading
-from .utils.animations import startup_animation
 
 # ------------
 # Paths
