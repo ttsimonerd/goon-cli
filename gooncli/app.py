@@ -44,7 +44,7 @@ def choose_goon():
     return "Yes" if random.randint(1, 100) <= 60 else "No"
 
 def choose_list():
-    return random.choice([HK_GREEN + "Animations", "Videos", "Hentais/Anime", "Names"])
+    return random.choice(["Animations", "Videos", "Hentais/Anime", "Names"])
 
 def section(title):
     type_out("\n" + HK_LIGHT_PURPLE + "=" * 40 + RESET, speed=0.01)
