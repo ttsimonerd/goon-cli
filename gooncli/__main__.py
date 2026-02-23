@@ -2,8 +2,7 @@ import sys
 import argparse
 from asyncio import sleep
 
-from .app import run_app, update, run_mobile
-from .app import clear, type_out
+from .app import run_app, update, run_mobile, clear, type_out
 from .config import load_config, save_config, reset_config, DEFAULT_CONFIG
 
 
@@ -41,7 +40,7 @@ def main():
         return
 
     # -----------------------------
-    # Run App
+    # Run app
     # -----------------------------
     cfg = load_config()
     speed = cfg["speed"]
