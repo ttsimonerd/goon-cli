@@ -8,59 +8,62 @@ from .config import load_config, save_config, reset_config, DEFAULT_CONFIG
 def restore_terminal():
     print("\033[?25h", end="")
 def main():
-    # -----------------------------
-    # Args
-    # -----------------------------
-    parser = argparse.ArgumentParser()
-    parser.add_argument("command", nargs="?", default="run")
-    parser.add_argument("key", nargs="?")
-    parser.add_argument("value", nargs="?")
-    args = parser.parse_args()
+    try:
+        # -----------------------------
+        # Args
+        # -----------------------------
+        parser = argparse.ArgumentParser()
+        parser.add_argument("command", nargs="?", default="run")
+        parser.add_argument("key", nargs="?")
+        parser.add_argument("value", nargs="?")
+        args = parser.parse_args()
 
-    # -----------------------------
-    # Config command
-    # -----------------------------
-    if args.command == "config":
-        handle_config(args)
-        restore_terminal()
-        return
-        restore_terminal()
+        # -----------------------------
+        # Config command
+        # -----------------------------
+        if args.command == "config":
+            handle_config(args)
+            restore_terminal()
+            return
+            restore_terminal()
 
-    # -----------------------------
-    # Update command
-    # -----------------------------
-    if args.command == "update":
-        update()
-        return
+        # -----------------------------
+        # Update command
+        # -----------------------------
+        if args.command == "update":
+            update()
+            return
 
-    # -----------------------------
-    # Mobile command
-    # -----------------------------
-    if args.command == "mobile":
+        # -----------------------------
+        # Mobile command
+        # -----------------------------
+        if args.command == "mobile":
+            cfg = load_config()
+            speed = cfg["speed"]
+            run_mobile(speed)
+            return
+
+        # -----------------------------
+        # Run app
+        # -----------------------------
         cfg = load_config()
         speed = cfg["speed"]
-        run_mobile(speed)
-        return
+        mobile = cfg["mobile_version"]
 
-    # -----------------------------
-    # Run app
-    # -----------------------------
-    cfg = load_config()
-    speed = cfg["speed"]
-    mobile = cfg["mobile_version"]
-
-    try:
-        if mobile:
-            run_mobile(speed)
-            restore_terminal()
-        else:
-            run_app(speed)
-            restore_terminal()
-    except KeyboardInterrupt:
-        print("\nProgram stopped by user.")
-        sleep(1)
-        type_out("Exiting..........")
-        clear()
+        try:
+            if mobile:
+                run_mobile(speed)
+                restore_terminal()
+            else:
+                run_app(speed)
+                restore_terminal()
+        except KeyboardInterrupt:
+            print("\nProgram stopped by user.")
+            sleep(1)
+            type_out("Exiting..........")
+            clear()
+    finally:
+        restore_terminal()
 
 
 def handle_config(args):
