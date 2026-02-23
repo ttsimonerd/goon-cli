@@ -5,7 +5,8 @@ from asyncio import sleep
 from .app import run_app, update, run_mobile, clear, type_out
 from .config import load_config, save_config, reset_config, DEFAULT_CONFIG
 
-
+def restore_terminal():
+    print("\033[?25h", end="")
 def main():
     # -----------------------------
     # Args
@@ -22,6 +23,7 @@ def main():
     if args.command == "config":
         handle_config(args)
         return
+        restore_terminal()
 
     # -----------------------------
     # Update command
@@ -49,8 +51,10 @@ def main():
     try:
         if mobile:
             run_mobile(speed)
+            restore_terminal()
         else:
             run_app(speed)
+            restore_terminal()
     except KeyboardInterrupt:
         print("\nProgram stopped by user.")
         sleep(1)
