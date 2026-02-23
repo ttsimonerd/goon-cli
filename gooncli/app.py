@@ -12,8 +12,6 @@ import termios
 import tty
 import select
 from .config import load_config
-from .mobile import run_mobile_version
-from .normal import run_normal_version
 
 # IMPORTANT FOR THE DEV -----> UPDATE COMMAND "update-gitrepo"
 
