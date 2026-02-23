@@ -11,6 +11,9 @@ import subprocess
 import termios
 import tty
 import select
+from .config import load_config
+from .mobile import run_mobile_version
+from .normal import run_normal_version
 
 # ------------
 # Colors
@@ -29,6 +32,9 @@ COLORS = [
 # ------------
 # Functions
 # ------------
+cfg = load_config()
+speed = cfg["speed"]
+
 def flush_input():
     while select.select([sys.stdin], [], [], 0)[0]:
         sys.stdin.read(1)
@@ -83,6 +89,15 @@ def print_centered_logo():
     for line in lines:
         type_out_colored(line.center(width), speed=0.005)
 
+def print_centered_logo_mobile():
+    text = resources.files("gooncli").joinpath("logo_mobile.txt").read_text()
+    lines = text.splitlines()
+
+    width, _ = shutil.get_terminal_size()
+
+    for line in lines:
+        type_out_colored(line.center(width), speed=0.005)
+
 def type_out_colored(text, speed=0.005):
     for char in text:
         if char.strip():
@@ -126,7 +141,7 @@ def update():
 second_old = None
 old = lock_input()
 goon_today = 0
-def run_app():
+def run_app(speedg):
     global second_old
     global old
     global goon_today
@@ -141,17 +156,17 @@ def run_app():
     sleep(1)
     type_out_colored("Hello, welcome to the local goon project!")
     sleep(1)
-    type_out("Do you want to take a try? (Yes/No) ")
+    type_out("Do you want to take a try? (Yes/No) ", speed=speedg)
     flush_input()
     unlock_input(old)
     yes_no =input("").lower()
-    if yes_no == "yes" or yes_no == "y":
+    if "yes" in yes_no or "y" in yes_no:
         second_old = lock_input()
         clear()
         sleep(0.5)
         section("First step, incoming")
         sleep(1)
-        loading(text="Choosing", duration=2)
+        loading(text="Choosing", duration=2 * speedg)
         type_out(f"Should you goon today?:")
         sleep(1)
         goon = choose_goon()
@@ -183,7 +198,7 @@ def run_app():
         clear()
         section("Second step, incoming")
         sleep(1)
-        loading(text="Choosing available lists", duration=3)
+        loading(text="Choosing available lists", duration=2 * speedg)
         type_out(HK_RED + "You will goon to something..." + RESET)
         sleep(1)
         goon_from = choose_list()
@@ -192,14 +207,14 @@ def run_app():
         clear()
         section("Third and last step, incoming")
         sleep(1)
-        loading(text="Chosing from the list", duration=3)
+        loading(text="Chosing from the list", duration=2 * speedg)
         if goon_from == "Animations":
             type_out(f"From the {HK_GREEN + goon_from + RESET} list you will goon to...")
             sleep(1)
             type_out(random_line(load_path("anim-list.txt")))
             sleep(0.5)
             type_out(HK_GREEN + "Have fun!" + RESET)
-            sleep(2)
+            sleep(1)
             unlock_input(second_old)
         elif goon_from == "Videos":
             type_out(f"From the {HK_GREEN + goon_from + RESET} list you will goon to...")
@@ -207,7 +222,7 @@ def run_app():
             type_out(random_line(load_path("vids-list.txt")))
             sleep(0.5)
             type_out(HK_GREEN + "Have fun!" + RESET)
-            sleep(2)
+            sleep(1)
             unlock_input(second_old)
         elif goon_from == "Hentais/Anime":
             type_out(f"From the {HK_GREEN + goon_from + RESET} list you will goon to...")
@@ -215,7 +230,7 @@ def run_app():
             type_out(random_line(load_path("henlist.txt")))
             sleep(0.5)
             type_out(HK_GREEN + "Have fun!" + RESET)
-            sleep(2)
+            sleep(1)
             unlock_input(second_old)
         elif goon_from == "Names":
             type_out(f"From the {HK_GREEN + goon_from + RESET} list you will goon to...")
@@ -223,5 +238,106 @@ def run_app():
             type_out(random_line(load_path("ph-namelist.txt")))
             sleep(0.5)
             type_out(HK_GREEN + "Have fun!" + RESET)
-            sleep(2)
+            sleep(1)
+            unlock_input(second_old)
+
+second_old = None
+goon_today = 0
+def run_mobile(speedg):
+    global second_old
+    global goon_today
+    clear()
+    sleep(1)
+    print_border()
+    sleep(1)
+    print_centered_logo_mobile()
+    sleep(1)
+    print_border()
+    print("\n")
+    sleep(1)
+    type_out_colored("Hello, welcome to the local goon project!")
+    sleep(1)
+    type_out("Do you want to take a try? (Yes/No) ", speed=speedg)
+    flush_input()
+    unlock_input(old)
+    yes_no =input("").lower()
+    if "yes" in yes_no or "y" in yes_no:
+        second_old = lock_input()
+        clear()
+        sleep(0.5)
+        section("First step, incoming")
+        sleep(1)
+        loading(text="Choosing", duration=2 * speedg)
+        type_out(f"Should you goon today?:")
+        sleep(1)
+        goon = choose_goon()
+        if goon == "Yes":
+            goon_today += 1
+            type_out(HK_GREEN + goon + RESET)
+        else:
+            type_out(HK_RED + goon + RESET)
+            sleep(1)
+            clear()
+            type_out(HK_RED + "Ooh! Sorry!" + RESET)
+            sleep(1)
+            type_out(HK_RED + "Maybe next time?" + RESET)
+            sleep(0.5)
+            type_out(HK_GREEN + "Exiting............................................" + RESET)
+            unlock_input(second_old)
+            clear()
+    else:
+        sleep(1)
+        type_out(HK_RED + "Ok" + RESET)
+        sleep(1.5)
+        type_out(HK_RED + "Goodbah" + RESET)
+        sleep(0.5)
+        type_out(HK_GREEN + "Exiting............................................" + RESET)
+        clear()
+
+    if goon_today == 1:
+        sleep(2)
+        clear()
+        section("Second step, incoming")
+        sleep(1)
+        loading(text="Choosing available lists", duration=2 * speedg)
+        type_out(HK_RED + "You will goon to something..." + RESET)
+        sleep(1)
+        goon_from = choose_list()
+        type_out(f"From the {HK_GREEN + goon_from + RESET} list!")
+        sleep(2)
+        clear()
+        section("Third and last step, incoming")
+        sleep(1)
+        loading(text="Chosing from the list", duration=2 * speedg)
+        if goon_from == "Animations":
+            type_out(f"From the {HK_GREEN + goon_from + RESET} list you will goon to...")
+            sleep(1)
+            type_out(random_line(load_path("anim-list.txt")))
+            sleep(0.5)
+            type_out(HK_GREEN + "Have fun!" + RESET)
+            sleep(1)
+            unlock_input(second_old)
+        elif goon_from == "Videos":
+            type_out(f"From the {HK_GREEN + goon_from + RESET} list you will goon to...")
+            sleep(1)
+            type_out(random_line(load_path("vids-list.txt")))
+            sleep(0.5)
+            type_out(HK_GREEN + "Have fun!" + RESET)
+            sleep(1)
+            unlock_input(second_old)
+        elif goon_from == "Hentais/Anime":
+            type_out(f"From the {HK_GREEN + goon_from + RESET} list you will goon to...")
+            sleep(1)
+            type_out(random_line(load_path("henlist.txt")))
+            sleep(0.5)
+            type_out(HK_GREEN + "Have fun!" + RESET)
+            sleep(1)
+            unlock_input(second_old)
+        elif goon_from == "Names":
+            type_out(f"From the {HK_GREEN + goon_from + RESET} list you will goon to...")
+            sleep(1)
+            type_out(random_line(load_path("ph-namelist.txt")))
+            sleep(0.5)
+            type_out(HK_GREEN + "Have fun!" + RESET)
+            sleep(1)
             unlock_input(second_old)
