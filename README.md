@@ -23,3 +23,12 @@ pip install git+https://github.com/ttsimonerd/goon-cli
 ```bash
 goon update
 ```
+## Command Arguments
+
+### These are the available arguments for the main command:
+```bash
+goon config
+```
+```bash
+goon mobile
+```
