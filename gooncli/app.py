@@ -32,6 +32,9 @@ COLORS = [
 # ------------
 # Functions
 # ------------
+def restore_terminal():
+    print("\033[?25h", end="")
+
 cfg = load_config()
 speed = cfg["speed"]
 
@@ -157,6 +160,7 @@ def run_app(speedg):
     type_out_colored("Hello, welcome to the local goon project!")
     sleep(1)
     type_out("Do you want to take a try? (Yes/No) ", speed=speedg)
+    restore_terminal()
     flush_input()
     unlock_input(old)
     yes_no =input("").lower()

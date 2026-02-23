@@ -22,6 +22,7 @@ def main():
     # -----------------------------
     if args.command == "config":
         handle_config(args)
+        restore_terminal()
         return
         restore_terminal()
 
